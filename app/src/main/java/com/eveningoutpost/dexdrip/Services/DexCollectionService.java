@@ -403,7 +403,7 @@ public class DexCollectionService extends Service implements BtCallBack {
 
             final BluetoothGattService gattService = mBluetoothGatt.getService(xDripDataService);
             if (gattService == null) {
-                if (!(static_use_blukon || blueReader.isblueReader() || Tomato.isTomato()||Bubble.isBubble()|| Atom.isAtom() || LibreBluetooth.isLibreBluettoh())) {
+                if (!(static_use_blukon || blueReader.isblueReader() || Tomato.isTomato()||Bubble.isBubble()||Atom.isAtom() || LibreBluetooth.isLibreBluettoh())) {
                     Log.w(TAG, "onServicesDiscovered: xdrip service " + xDripDataService + " not found"); //TODO the selection of nrf is not active at the beginning,so this error will be trown one time unneeded, mey to be optimized.
                     // TODO this should be reworked to be an efficient selector
                     listAvailableServices(mBluetoothGatt);
@@ -915,7 +915,7 @@ public class DexCollectionService extends Service implements BtCallBack {
             return xdrip.getAppContext().getString(R.string.tomato);
         } else if (static_use_nrf && Bubble.isBubble()) {
             return xdrip.getAppContext().getString(R.string.bubble);
-        } else if (static_use_nrf && Atom.isAtom()) {
+        }else if (static_use_nrf && Atom.isAtom()) {
             return xdrip.getAppContext().getString(R.string.atom);
         } else if (static_use_blukon) {
             return xdrip.getAppContext().getString(R.string.blukon);
