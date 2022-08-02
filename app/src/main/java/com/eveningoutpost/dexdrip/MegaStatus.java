@@ -12,6 +12,7 @@ import static com.eveningoutpost.dexdrip.utils.DexCollectionType.Medtrum;
 import static com.eveningoutpost.dexdrip.utils.DexCollectionType.NSFollow;
 import static com.eveningoutpost.dexdrip.utils.DexCollectionType.SHFollow;
 import static com.eveningoutpost.dexdrip.utils.DexCollectionType.WebFollow;
+import static com.eveningoutpost.dexdrip.utils.DexCollectionType.CLFollow;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -76,13 +77,6 @@ import com.google.android.gms.wearable.DataMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
-import static com.eveningoutpost.dexdrip.Home.startWatchUpdaterService;
-import static com.eveningoutpost.dexdrip.utils.DexCollectionType.CLFollow;
-import static com.eveningoutpost.dexdrip.utils.DexCollectionType.DexcomG5;
-import static com.eveningoutpost.dexdrip.utils.DexCollectionType.Medtrum;
-import static com.eveningoutpost.dexdrip.utils.DexCollectionType.NSFollow;
-import static com.eveningoutpost.dexdrip.utils.DexCollectionType.SHFollow;
 
 public class MegaStatus extends ActivityWithMenu {
 

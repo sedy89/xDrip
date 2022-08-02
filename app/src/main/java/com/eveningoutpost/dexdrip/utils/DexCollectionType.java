@@ -287,6 +287,7 @@ public enum DexCollectionType {
                 return "CareLink";
             case UiBased:
                 return "UI Based";
+
             default:
                 return dct.name();
         }
