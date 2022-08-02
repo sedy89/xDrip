@@ -1,3 +1,7 @@
+# Nightscout + Medtronic Carelink Follower
+> this repository is a merge of the official xdrip repository and the xDripCareLinkFollower repo of benceszasz 
+> pls check the readme at -> https://github.com/benceszasz/xDripCareLinkFollower
+
 # Nightscout xDrip+
 > Enhanced personal research version of xDrip
 
