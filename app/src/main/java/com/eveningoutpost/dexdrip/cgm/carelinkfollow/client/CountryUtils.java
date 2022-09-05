@@ -125,12 +125,4 @@ public class CountryUtils {
         return Arrays.asList(supportedCountryCodes).contains(countryCode);
     }
 
-    public static boolean isUS(String countryCode){
-        return countryCode.equals("us");
-    }
-
-    public static boolean isOutsideUS(String countryCode){
-        return !isUS(countryCode);
-    }
-
 }
