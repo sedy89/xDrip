@@ -54,11 +54,11 @@ import com.eveningoutpost.dexdrip.UtilityModels.Pref;
 import com.eveningoutpost.dexdrip.UtilityModels.ShotStateStore;
 import com.eveningoutpost.dexdrip.UtilityModels.StatusItem;
 import com.eveningoutpost.dexdrip.UtilityModels.UploaderQueue;
-import com.eveningoutpost.dexdrip.cgm.carelinkfollow.CareLinkFollowService;
 import com.eveningoutpost.dexdrip.cgm.medtrum.MedtrumCollectionService;
 import com.eveningoutpost.dexdrip.cgm.nsfollow.NightscoutFollowService;
 import com.eveningoutpost.dexdrip.cgm.sharefollow.ShareFollowService;
 import com.eveningoutpost.dexdrip.cgm.webfollow.WebFollowService;
+import com.eveningoutpost.dexdrip.cgm.carelinkfollow.CareLinkFollowService;
 import com.eveningoutpost.dexdrip.insulin.inpen.InPenEntry;
 import com.eveningoutpost.dexdrip.insulin.inpen.InPenService;
 import com.eveningoutpost.dexdrip.utils.ActivityWithMenu;
@@ -127,8 +127,8 @@ public class MegaStatus extends ActivityWithMenu {
     private static final String INPEN_STATUS = "InPen";
     private static final String NIGHTSCOUT_FOLLOW = "Nightscout Follow";
     private static final String SHARE_FOLLOW = "Dex Share Follow";
-    private static final String CARELINK_FOLLOW = "CareLink Follow";
     private static final String WEB_FOLLOW = "Web Follower";
+    private static final String CARELINK_FOLLOW = "CareLink Follow";
     private static final String XDRIP_LIBRE2 = "Libre2";
 
     static {
@@ -208,7 +208,6 @@ public class MegaStatus extends ActivityWithMenu {
             if(dexCollectionType.equals(WebFollow)) {
                 addAsection(WEB_FOLLOW, "Web Follower Status");
             }
-
             if(dexCollectionType.equals(CLFollow)) {
                 addAsection(CARELINK_FOLLOW, "CareLink Follow Status");
             }
@@ -272,11 +271,11 @@ public class MegaStatus extends ActivityWithMenu {
             case SHARE_FOLLOW:
                 la.addRows(ShareFollowService.megaStatus());
                 break;
-            case CARELINK_FOLLOW:
-                la.addRows(CareLinkFollowService.megaStatus());
-                break;
             case WEB_FOLLOW:
                 la.addRows(WebFollowService.megaStatus());
+                break;
+            case CARELINK_FOLLOW:
+                la.addRows(CareLinkFollowService.megaStatus());
                 break;
             case XDRIP_LIBRE2:
                 la.addRows(LibreReceiver.megaStatus());

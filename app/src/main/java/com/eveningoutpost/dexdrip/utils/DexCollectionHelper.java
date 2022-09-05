@@ -11,8 +11,8 @@ import com.eveningoutpost.dexdrip.R;
 import com.eveningoutpost.dexdrip.Services.Ob1G5CollectionService;
 import com.eveningoutpost.dexdrip.UtilityModels.CollectionServiceStarter;
 import com.eveningoutpost.dexdrip.UtilityModels.Pref;
-import com.eveningoutpost.dexdrip.cgm.carelinkfollow.CareLinkFollowService;
 import com.eveningoutpost.dexdrip.cgm.sharefollow.ShareFollowService;
+import com.eveningoutpost.dexdrip.cgm.carelinkfollow.CareLinkFollowService;
 import com.eveningoutpost.dexdrip.xdrip;
 
 import static com.eveningoutpost.dexdrip.ui.dialog.QuickSettingsDialogs.booleanSettingDialog;
@@ -132,21 +132,21 @@ public class DexCollectionHelper {
 
             case CLFollow:
                 textSettingDialog(activity,
-                        "clfollow_country", "CareLink Country",
-                        "Enter CareLink two letter Country Code",
+                        "connectfollow_country", "CareLink Country",
+                        "Two letter country ISO code",
                         InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD,
                         new Runnable() {
                             @Override
                             public void run() {
                                 textSettingDialog(activity,
-                                        "clfollow_user", "CareLink Username",
+                                        "connectfollow_user", "CareLink Username",
                                         "Enter CareLink Username",
                                         InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD,
                                         new Runnable() {
                                             @Override
                                             public void run() {
                                                 textSettingDialog(activity,
-                                                        "clfollow_pass", "CareLink Password",
+                                                        "connectfollow_pass", "CareLink Password",
                                                         "Enter CareLink Password",
                                                         InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD,
                                                         new Runnable() {
