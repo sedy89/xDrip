@@ -1221,6 +1221,7 @@ public class Preferences extends BasePreferenceActivity implements SearchPrefere
 
             final Preference shFollowUser = findPreference("shfollow_user");
             final Preference shFollowPass = findPreference("shfollow_pass");
+
             if (collectionType == DexCollectionType.SHFollow) {
                 final Preference.OnPreferenceChangeListener shFollowListener = new Preference.OnPreferenceChangeListener() {
                     @Override
@@ -1327,6 +1328,8 @@ public class Preferences extends BasePreferenceActivity implements SearchPrefere
             } catch (Exception e) {
                 //
             }
+
+
 
             final Preference scanShare = findPreference("scan_share2_barcode");
             final EditTextPreference transmitterId = (EditTextPreference) findPreference("dex_txid");
