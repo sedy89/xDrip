@@ -13,7 +13,6 @@ import com.eveningoutpost.dexdrip.UtilityModels.Constants;
 import com.eveningoutpost.dexdrip.UtilityModels.Inevitable;
 import com.eveningoutpost.dexdrip.UtilityModels.Pref;
 import com.eveningoutpost.dexdrip.UtilityModels.StatusItem;
-import com.eveningoutpost.dexdrip.cgm.nsfollow.utils.Anticipate;
 import com.eveningoutpost.dexdrip.utils.framework.BuggySamsung;
 import com.eveningoutpost.dexdrip.utils.framework.ForegroundService;
 import com.eveningoutpost.dexdrip.utils.DexCollectionType;
@@ -28,7 +27,7 @@ import static com.eveningoutpost.dexdrip.Models.JoH.msSince;
 import static com.eveningoutpost.dexdrip.UtilityModels.BgGraphBuilder.DEXCOM_PERIOD;
 
 /**
- * Medtronic CareLink Connect Follow Service
+ * Medtronic CareLink Follow Service
  *   - main service class for managing CareLink Connect data retrieval
  *   - start/stop data retrieval
  *   - provide status infos of follower service
@@ -36,7 +35,7 @@ import static com.eveningoutpost.dexdrip.UtilityModels.BgGraphBuilder.DEXCOM_PER
 
 public class CareLinkFollowService extends ForegroundService {
 
-    private static final String TAG = "CLFollow";
+    private static final String TAG = "CareLinkFollow";
     private static final long SAMPLE_PERIOD = DEXCOM_PERIOD;
 
     protected static volatile String lastState = "";
@@ -50,8 +49,8 @@ public class CareLinkFollowService extends ForegroundService {
     private static volatile long lastBgTime;
 
     private static CareLinkFollowDownloader downloader;
-
-    private static final long WAKE_UP_GRACE_SECOND = 20;
+    private static volatile int gracePeriod = 0;
+    private static volatile int missedPollInterval = 0;
 
 
     @Override
@@ -85,6 +84,8 @@ public class CareLinkFollowService extends ForegroundService {
 
     public static void resetInstance() {
         downloader = null;
+        gracePeriod = 0;
+        missedPollInterval = 0;
     }
 
     private static boolean shouldServiceRun() {
@@ -92,23 +93,54 @@ public class CareLinkFollowService extends ForegroundService {
     }
 
     private static long getGraceMillis() {
-        return Constants.SECOND_IN_MS * WAKE_UP_GRACE_SECOND;
+        return Constants.SECOND_IN_MS * gracePeriod;
+    }
+
+    private static long getMissedIntervalMillis() {
+        if(missedPollInterval == 0)
+            return SAMPLE_PERIOD;
+        else
+            return Constants.MINUTE_IN_MS * missedPollInterval;
     }
 
     static void scheduleWakeUp() {
         final BgReading lastBg = BgReading.lastNoSenssor();
         final long last = lastBg != null ? lastBg.timestamp : 0;
 
-        final long next = Anticipate.next(JoH.tsl(), last, SAMPLE_PERIOD, getGraceMillis()) + getGraceMillis();
+        final long next = anticipateNextWakeUp(JoH.tsl(), last, SAMPLE_PERIOD, getGraceMillis(), getMissedIntervalMillis());
         wakeup_time = next;
         UserError.Log.d(TAG, "Anticipate next: " + JoH.dateTimeText(next) + "  last BG timestamp: " + JoH.dateTimeText(last));
 
-        JoH.wakeUpIntent(xdrip.getAppContext(), JoH.msTill(next), WakeLockTrampoline.getPendingIntent(CareLinkFollowService.class, Constants.CONNECTFOLLOW_SERVICE_FAILOVER_ID));
+        JoH.wakeUpIntent(xdrip.getAppContext(), JoH.msTill(next), WakeLockTrampoline.getPendingIntent(CareLinkFollowService.class, Constants.CARELINK_SERVICE_FAILOVER_ID));
+    }
+
+    public static long anticipateNextWakeUp(long now, final long last, final long period, final long grace, final long missedInterval) {
+
+        long next;
+
+        //recent reading (less then data period) => last + period + grace
+        if((now - last) < period) {
+            next = last + period + grace;
+        }
+        //old reading => anticipated next + grace
+        else{
+            //last expected
+            next = now + ((last - now) % period);
+            //add missed poll interval until future time is reached
+            while(next < now){
+                next += missedInterval;
+            }
+            //add grace
+            next += grace;
+        }
+
+        return  next;
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        final PowerManager.WakeLock wl = JoH.getWakeLock("CLFollow-osc", 60000);
+        final PowerManager.WakeLock wl = JoH.getWakeLock("CareLinkFollow-osc", 60000);
         try {
 
             UserError.Log.d(TAG, "WAKE UP WAKE UP WAKE UP");
@@ -125,6 +157,10 @@ public class CareLinkFollowService extends ForegroundService {
             last_wakeup = JoH.tsl();
 
             // Check current
+            if(gracePeriod == 0)
+                gracePeriod = Pref.getStringToInt("clfollow_grace_period", 30);
+            if(missedPollInterval == 0)
+                missedPollInterval = Pref.getStringToInt("clfollow_missed_poll_interval", 5);
             lastBg = BgReading.lastNoSenssor();
             if (lastBg != null) {
                 lastBgTime = lastBg.timestamp;
@@ -133,14 +169,14 @@ public class CareLinkFollowService extends ForegroundService {
                 // Get the data
                 if (downloader == null) {
                     downloader = new CareLinkFollowDownloader(
-                            Pref.getString("connectfollow_user", ""),
-                            Pref.getString("connectfollow_pass", ""),
-                            Pref.getString("connectfollow_country", "").toLowerCase()
+                            Pref.getString("clfollow_user", ""),
+                            Pref.getString("clfollow_pass", ""),
+                            Pref.getString("clfollow_country", "").toLowerCase()
                     );
                 }
 
-                if (JoH.ratelimit("last-connect-follow-poll", 5)) {
-                    Inevitable.task("Connect-Follow-Work", 200, () -> {
+                if (JoH.ratelimit("last-carelink-follow-poll", 5)) {
+                    Inevitable.task("CareLink-Follow-Work", 200, () -> {
                         try {
                             downloader.doEverything( );
                         } catch (NullPointerException e) {
@@ -152,8 +188,6 @@ public class CareLinkFollowService extends ForegroundService {
             } else {
                 UserError.Log.d(TAG, "Already have recent reading: " + msSince(lastBg.timestamp));
             }
-
-
             scheduleWakeUp();
         } finally {
             JoH.releaseWakeLock(wl);
@@ -197,6 +231,9 @@ public class CareLinkFollowService extends ForegroundService {
 
         megaStatus.add(new StatusItem("Latest BG", ageLastBg + (lastBg != null ? " ago" : ""), bgAgeHighlight));
         megaStatus.add(new StatusItem("BG receive delay", ageOfBgLastPoll, ageOfLastBgPollHighlight));
+        megaStatus.add(new StatusItem("Data period:", JoH.niceTimeScalar(SAMPLE_PERIOD)));
+        megaStatus.add(new StatusItem("Grace period:", JoH.niceTimeScalar(getGraceMillis())));
+        megaStatus.add(new StatusItem("Missed poll interval:", JoH.niceTimeScalar(getMissedIntervalMillis())));
         megaStatus.add(new StatusItem());
         megaStatus.add(new StatusItem("Last poll", lastPoll > 0 ? JoH.niceTimeScalar(JoH.msSince(lastPoll)) + " ago" : "n/a"));
         megaStatus.add(new StatusItem("Last wakeup", last_wakeup > 0 ? JoH.niceTimeScalar(JoH.msSince(last_wakeup)) + " ago" : "n/a"));
@@ -204,6 +241,7 @@ public class CareLinkFollowService extends ForegroundService {
         if (lastBg != null) {
             megaStatus.add(new StatusItem("Last BG time", JoH.dateTimeText(lastBg.timestamp)));
         }
+        megaStatus.add(new StatusItem("Last poll time", lastPoll > 0 ?  JoH.dateTimeText(lastPoll) : "n/a"));
         megaStatus.add(new StatusItem("Next poll time", JoH.dateTimeText(wakeup_time)));
         megaStatus.add(new StatusItem());
         megaStatus.add(new StatusItem("Buggy Samsung", JoH.buggy_samsung ? "Yes" : "No"));
