@@ -2,14 +2,12 @@ package com.eveningoutpost.dexdrip;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.eveningoutpost.dexdrip.Models.JoH.msSince;
-import static com.eveningoutpost.dexdrip.Models.JoH.quietratelimit;
 import static com.eveningoutpost.dexdrip.Models.JoH.tsl;
 import static com.eveningoutpost.dexdrip.UtilityModels.ColorCache.X;
 import static com.eveningoutpost.dexdrip.UtilityModels.ColorCache.getCol;
 import static com.eveningoutpost.dexdrip.UtilityModels.Constants.DAY_IN_MS;
 import static com.eveningoutpost.dexdrip.UtilityModels.Constants.HOUR_IN_MS;
 import static com.eveningoutpost.dexdrip.UtilityModels.Constants.MINUTE_IN_MS;
-import static com.eveningoutpost.dexdrip.UtilityModels.Constants.SECOND_IN_MS;
 import static com.eveningoutpost.dexdrip.xdrip.gs;
 
 import android.Manifest;
@@ -50,7 +48,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -115,7 +112,6 @@ import com.eveningoutpost.dexdrip.UtilityModels.UpdateActivity;
 import com.eveningoutpost.dexdrip.UtilityModels.VoiceCommands;
 import com.eveningoutpost.dexdrip.calibrations.NativeCalibrationPipe;
 import com.eveningoutpost.dexdrip.calibrations.PluggableCalibration;
-import com.eveningoutpost.dexdrip.cloud.backup.BackupActivity;
 import com.eveningoutpost.dexdrip.dagger.Injectors;
 import com.eveningoutpost.dexdrip.databinding.ActivityHomeBinding;
 import com.eveningoutpost.dexdrip.databinding.ActivityHomeShelfSettingsBinding;
@@ -179,18 +175,16 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
-import lecho.lib.hellocharts.gesture.ChartTouchHandler;
 import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.listener.ViewportChangeListener;
 import lecho.lib.hellocharts.model.Viewport;
 import lecho.lib.hellocharts.view.LineChartView;
 import lecho.lib.hellocharts.view.PreviewLineChartView;
 import lombok.Getter;
-import lombok.val;
 
 public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPermissionsResultCallback {
     private final static String TAG = "jamorham " + Home.class.getSimpleName();
-    private final static boolean d = false;
+    private final static boolean d = true;
     private static final int MAX_INSULIN_PROFILES = 3;
     public final int maxInsulinProfiles = MultipleInsulins.isEnabled() ? MAX_INSULIN_PROFILES : 0;
     public final static String START_SPEECH_RECOGNITION = "START_APP_SPEECH_RECOGNITION";
@@ -217,8 +211,6 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
     private boolean updateStuff;
     private boolean updatingPreviewViewport = false;
     private boolean updatingChartViewport = false;
-    private long lastViewPortPan;
-    private long lastDataTick;
     private boolean screen_forced_on = false;
     public BgGraphBuilder bgGraphBuilder;
     private Viewport tempViewport = new Viewport();
@@ -395,12 +387,13 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         mToolbar.setOnLongClickListener(v -> {
             // show configurator
             final ActivityHomeShelfSettingsBinding binding = ActivityHomeShelfSettingsBinding.inflate(getLayoutInflater());
-            final Dialog dialog = new Dialog(home);
+            final Dialog dialog = new Dialog(v.getContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             binding.setVs(homeShelf);
             binding.setHome(home);
             homeShelf.set("arrow_configurator", false);
             dialog.setContentView(binding.getRoot());
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
             return false;
         });
@@ -1116,10 +1109,6 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         if (even_even_more.length() > 0) intent.putExtra(extra + "3", even_even_more);
         Log.e("xxxxx", "calling startActivity");
         context.startActivity(intent);
-    }
-
-    public void cloudBackup(MenuItem x) {
-        JoH.startActivity(BackupActivity.class);
     }
 
     public void crowdTranslate(MenuItem x) {
@@ -1868,19 +1857,17 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
             @Override
             public void onReceive(Context ctx, Intent intent) {
                 if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
-                    if (msSince(lastDataTick) > SECOND_IN_MS * 30) {
-                        Inevitable.task("process-time-tick", 300, () -> runOnUiThread(() -> {
-                            updateCurrentBgInfo("time tick");
-                            updateHealthInfo("time_tick");
-                        }));
-                    }
+                    Inevitable.task("process-time-tick", 300, () -> runOnUiThread(() -> {
+                        updateCurrentBgInfo("time tick");
+                        updateHealthInfo("time_tick");
+                    }));
                 }
             }
         };
         newDataReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context ctx, Intent intent) {
-                lastDataTick = tsl();
+                holdViewport.set(0, 0, 0, 0);
                 updateCurrentBgInfo("new data");
                 updateHealthInfo("new_data");
             }
@@ -1892,6 +1879,8 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
 
         LocalBroadcastManager.getInstance(this).registerReceiver(statusReceiver,
                 new IntentFilter(Intents.HOME_STATUS_ACTION));
+
+        holdViewport.set(0, 0, 0, 0);
 
         if (invalidateMenu) {
             invalidateOptionsMenu();
@@ -1961,40 +1950,10 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
     }
 
-    protected static class InterceptingGestureHandler extends GestureDetector {
-
-        final Home context;
-        final GestureDetector originalDetector;
-
-        public InterceptingGestureHandler(Home context, GestureDetector originalDetector) {
-            super(context, new GestureDetector.SimpleOnGestureListener() {
-            });
-            this.originalDetector = originalDetector;
-            this.context = context;
-        }
-
-        @Override
-        public boolean onTouchEvent(MotionEvent ev) {
-            if (ev.getAction() == MotionEvent.ACTION_MOVE) {
-                if (JoH.quietratelimit("viewport-intercept",5)) {
-                    UserError.Log.d("VIEWPORT", "Intercept gesture move event " + ev);
-                }
-                context.lastViewPortPan = tsl();
-            }
-            return originalDetector.onTouchEvent(ev);
-        }
-
-
-    }
-
-
-    private void setupCharts(final String source) {
-
-        UserError.Log.d(TAG, "VIEWPORT setupCharts source: " + source);
-
+    private void setupCharts() {
         bgGraphBuilder = new BgGraphBuilder(this);
         updateStuff = false;
-        chart = findViewById(R.id.chart);
+        chart = (LineChartView) findViewById(R.id.chart);
 
         if (BgGraphBuilder.isXLargeTablet(getApplicationContext())) {
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) chart.getLayoutParams();
@@ -2003,27 +1962,6 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
         chart.setBackgroundColor(getCol(X.color_home_chart_background));
         chart.setZoomType(ZoomType.HORIZONTAL);
-        chart.setMaxZoom(50f);
-
-        // inject our gesture handler if it hasn't already been done
-        try {
-            val gestureDetector =  ChartTouchHandler.class.getDeclaredField("gestureDetector");
-            gestureDetector.setAccessible(true);
-            val chartTouchHandler = chart.getTouchHandler();
-            val previewChartTouchHandler = previewChart.getTouchHandler();
-            val activeDetector = (GestureDetector) gestureDetector.get(chartTouchHandler);
-            val previewActiveDetector = (GestureDetector) gestureDetector.get(previewChartTouchHandler);
-            if (!(activeDetector instanceof InterceptingGestureHandler)) {
-                gestureDetector.set(chartTouchHandler, new InterceptingGestureHandler(this, activeDetector));
-            } else {
-                UserError.Log.d(TAG, "Already intercepting viewport");
-            }
-            if (!(previewActiveDetector instanceof InterceptingGestureHandler)) {
-                gestureDetector.set(previewChartTouchHandler, new InterceptingGestureHandler(this, previewActiveDetector));
-            }
-        } catch (NullPointerException | NoSuchFieldException | IllegalAccessException | ClassCastException e) {
-            UserError.Log.d(TAG, "Exception injecting touch handler: " + e);
-        }
 
         chart.getChartData().setAxisXTop(null);
 /*
@@ -2069,7 +2007,7 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
             };
             chart.setBackground(background);
         }*/
-        previewChart = findViewById(R.id.chart_preview);
+        previewChart = (PreviewLineChartView) findViewById(R.id.chart_preview);
 
         chart.setLineChartData(bgGraphBuilder.lineData());
         chart.setOnValueTouchListener(bgGraphBuilder.getOnValueSelectTooltipListener(mActivity));
@@ -2078,15 +2016,15 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         previewChart.setZoomType(ZoomType.HORIZONTAL);
         previewChart.setLineChartData(bgGraphBuilder.previewLineData(chart.getLineChartData()));
         previewChart.setViewportCalculationEnabled(true);
-        previewChart.setViewportChangeListener(new PreviewChartViewportListener());
+        previewChart.setViewportChangeListener(new ViewportListener());
         chart.setViewportCalculationEnabled(true);
-        chart.setViewportChangeListener(new MainChartViewPortListener());
+        chart.setViewportChangeListener(new ChartViewPortListener());
         updateStuff = true;
-        //setViewport();
+        setViewport();
 
         if (small_height) {
             previewChart.setVisibility(View.GONE);
-            // TODO this doesn't look right, fix to some specific hours?
+
             // quick test
             Viewport moveViewPort = new Viewport(chart.getMaximumViewport());
             float tempwidth = (float) moveViewPort.width() / 4;
@@ -2096,19 +2034,18 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
             holdViewport.bottom = moveViewPort.bottom;
             chart.setCurrentViewport(holdViewport);
             previewChart.setCurrentViewport(holdViewport);
-            UserError.Log.e(TAG, "SMALL HEIGHT VIEWPORT WARNING");
         } else {
             if (homeShelf.get("time_buttons") || homeShelf.get("time_locked_always")) {
-                final long which_hour = PersistentStore.getLong("home-locked-hours"); // TODO use which time method
+                final long which_hour = PersistentStore.getLong("home-locked-hours");
                 if (which_hour > 0) {
                     hours = which_hour;
+                    setHoursViewPort();
                 } else {
                     hours = DEFAULT_CHART_HOURS;
                 }
-                setHoursViewPort(source);
+
             } else {
                 hours = DEFAULT_CHART_HOURS;
-                setHoursViewPort(source);
             }
             previewChart.setVisibility(homeShelf.get("chart_preview") ? View.VISIBLE : View.GONE);
         }
@@ -2121,6 +2058,13 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
     }
 
+    public void setViewport() {
+        if (tempViewport.left == 0.0 || holdViewport.left == 0.0 || holdViewport.right >= (new Date().getTime())) {
+            previewChart.setCurrentViewport(bgGraphBuilder.advanceViewport(chart, previewChart, hours));
+        } else {
+            previewChart.setCurrentViewport(holdViewport);
+        }
+    }
 
     @Override
     public void onPause() {
@@ -2261,56 +2205,22 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         return isHourLocked(hour);
     }
 
-    private void setHoursViewPort(final String source) {
-
-        boolean exactHoursSpecified = false;
-
-        final Viewport maxViewPort = new Viewport(chart.getMaximumViewport());
-
-        switch (source) {
-            case "":
-            case "timeButtonClick":
-            case "timeButtonLongClick":
-                exactHoursSpecified = true;
-                break;
-
-            case "new data":
-            case "time tick":
-                if (msSince(lastViewPortPan) < 45 * SECOND_IN_MS) {
-                    UserError.Log.d(TAG, "Skipping VIEWPORT adjustment as panning and data just arrived: " + holdViewport.toString());
-                    holdViewport.top = maxViewPort.top;
-                    holdViewport.bottom = maxViewPort.bottom;
-                    chart.setCurrentViewport(holdViewport); // reuse existing
-                    return;
-                }
-                break;
-        }
-
-        float ideal_hours_to_show = DEFAULT_CHART_HOURS + bgGraphBuilder.getPredictivehours();
-        // always show at least the ideal number of hours if locked or auto
-        float hours_to_show =  exactHoursSpecified ? hours : Math.max(hours, ideal_hours_to_show);
-
-        UserError.Log.d(TAG, "VIEWPORT " + source + " moveviewport in setHours: asked " + hours + " vs auto " + ideal_hours_to_show + " = " + hours_to_show + " full chart width: " + bgGraphBuilder.hoursShownOnChart());
-
-        float hour_width = maxViewPort.width() / bgGraphBuilder.hoursShownOnChart();
-        holdViewport.left = maxViewPort.right - hour_width * hours_to_show;
-        holdViewport.right = maxViewPort.right;
-        holdViewport.top = maxViewPort.top;
-        holdViewport.bottom = maxViewPort.bottom;
-
-    if (d) {
-        UserError.Log.d(TAG, "HOLD VIEWPORT " + holdViewport);
-        UserError.Log.d(TAG, "MAX VIEWPORT " + maxViewPort);
-    }
-
+    private void setHoursViewPort() {
+        final Viewport moveViewPort = new Viewport(chart.getMaximumViewport());
+        float hour_width = moveViewPort.width() / 24;
+        holdViewport.left = moveViewPort.right - hour_width * hours;
+        holdViewport.right = moveViewPort.right;
+        holdViewport.top = moveViewPort.top;
+        holdViewport.bottom = moveViewPort.bottom;
         chart.setCurrentViewport(holdViewport);
 
+        previewChart.setCurrentViewport(holdViewport);
     }
 
     // set the chart viewport to whatever the button push represents
     public void timeButtonClick(View v) {
         hours = getButtonHours(v);
-        setHoursViewPort("timeButtonClick");
+        setHoursViewPort();
     }
 
     private long getButtonHours(View v) {
@@ -2342,7 +2252,7 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         } else {
             hours = this_button_hours;
             setHourLocked(hours);
-            setHoursViewPort("timeButtonLongClick");
+            setHoursViewPort();
         }
 
         ui.bump();
@@ -2373,7 +2283,7 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
     }
 
-    private void updateCurrentBgInfo(final String source) {
+    private void updateCurrentBgInfo(String source) {
         Log.d(TAG, "updateCurrentBgInfo from: " + source);
 
         if (!activityVisible) {
@@ -2382,11 +2292,10 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
         if (reset_viewport) {
             reset_viewport = false;
-          //  holdViewport.set(0, 0, 0, 0);
-           // if (chart != null) chart.setZoomType(ZoomType.HORIZONTAL);
-            // TODO above reset viewport thing seems defunct now
+            holdViewport.set(0, 0, 0, 0);
+            if (chart != null) chart.setZoomType(ZoomType.HORIZONTAL);
         }
-        setupCharts(source);
+        setupCharts();
         initializeGraphicTrendArrow();
         final TextView notificationText = (TextView) findViewById(R.id.notices);
         final TextView lowPredictText = (TextView) findViewById(R.id.lowpredict);
@@ -3644,7 +3553,7 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
     }
 
     // classes
-    private class MainChartViewPortListener implements ViewportChangeListener {
+    private class ChartViewPortListener implements ViewportChangeListener {
         @Override
         public synchronized void onViewportChanged(Viewport newViewport) {
             if (!updatingPreviewViewport) {
@@ -3656,7 +3565,7 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
     }
 
-    public class PreviewChartViewportListener implements ViewportChangeListener {
+    public class ViewportListener implements ViewportChangeListener {
         @Override
         public synchronized void onViewportChanged(Viewport newViewport) {
             if (!updatingChartViewport) {
@@ -3668,11 +3577,6 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
             }
             if (updateStuff) {
                 holdViewport.set(newViewport.left, newViewport.top, newViewport.right, newViewport.bottom);
-                if (d) {
-                    if (quietratelimit("viewport-updated-by-change", 1)) {
-                        UserError.Log.d(TAG, "VIEWPORT UPDATED VIA CHANGE: " + holdViewport);
-                    }
-                }
             }
         }
     }

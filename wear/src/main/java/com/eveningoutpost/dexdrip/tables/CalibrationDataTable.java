@@ -1,4 +1,4 @@
-package com.eveningoutpost.dexdrip.tables;
+package com.eveningoutpost.dexdrip.Tables;
 
 import android.app.ListActivity;
 import android.content.Context;

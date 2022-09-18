@@ -253,9 +253,23 @@ public class AlertList extends ActivityWithMenu {
         listViewHigh.setAdapter(simpleAdapterHigh);
     }
 
-    private String shortPath(final String path) {
+    private String shortPath(String path) {
         try {
-            return EditAlertActivity.shortPath(path);
+            if (path != null) {
+                if (path.length() == 0) {
+                    return "xDrip Default";
+                }
+                Ringtone ringtone = RingtoneManager.getRingtone(mContext, Uri.parse(path));
+                if (ringtone != null) {
+                    return ringtone.getTitle(mContext);
+                } else {
+                    String[] segments = path.split("/");
+                    if (segments.length > 1) {
+                        return segments[segments.length - 1];
+                    }
+                }
+            }
+            return "";
         } catch (SecurityException e) {
             // need external storage permission?
             checkStoragePermissions(gs(R.string.need_permission_to_access_audio_files));

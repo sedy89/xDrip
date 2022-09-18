@@ -1,4 +1,4 @@
-package com.eveningoutpost.dexdrip.tables;
+package com.eveningoutpost.dexdrip.Tables;
 
 import android.app.AlertDialog;
 import android.content.Context;
