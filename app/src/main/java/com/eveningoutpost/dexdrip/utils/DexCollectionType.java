@@ -8,6 +8,7 @@ import com.eveningoutpost.dexdrip.Services.Ob1G5CollectionService;
 import com.eveningoutpost.dexdrip.Services.UiBasedCollector;
 import com.eveningoutpost.dexdrip.Services.WifiCollectionService;
 import com.eveningoutpost.dexdrip.UtilityModels.Pref;
+import com.eveningoutpost.dexdrip.cgm.carelinkfollow.CareLinkFollowService;
 import com.eveningoutpost.dexdrip.cgm.medtrum.MedtrumCollectionService;
 import com.eveningoutpost.dexdrip.cgm.nsfollow.NightscoutFollowService;
 import com.eveningoutpost.dexdrip.cgm.sharefollow.ShareFollowService;
@@ -41,6 +42,7 @@ public enum DexCollectionType {
     NSEmulator("NSEmulator"),
     NSFollow("NSFollower"),
     SHFollow("SHFollower"),
+    CLFollow("CLFollower"),
     WebFollow("WebFollower"),
     Medtrum("Medtrum"),
     UiBased("UiBased"),
@@ -200,6 +202,8 @@ public enum DexCollectionType {
                 return NightscoutFollowService.class;
             case SHFollow:
                 return ShareFollowService.class;
+            case CLFollow:
+                return CareLinkFollowService.class;
             case WebFollow:
                 return WebFollowService.class;
             case UiBased:
@@ -279,9 +283,10 @@ public enum DexCollectionType {
                 return "Nightscout";
             case SHFollow:
                 return "Share";
+            case CLFollow:
+                return "CareLink";
             case UiBased:
                 return "UI Based";
-
             default:
                 return dct.name();
         }
