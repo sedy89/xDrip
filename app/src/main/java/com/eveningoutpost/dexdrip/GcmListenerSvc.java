@@ -79,22 +79,20 @@ public class GcmListenerSvc extends JamListenerSvc {
         return l;
     }
 
-    // TODO probably needs alternate workaround for google play bug
-    /*@Override
-    protected Intent zzf(Intent interceptedIntent) {
+    @Override
+    protected Intent zzD(Intent inteceptedIntent) {
         // intercept and fix google play services wakelocking bug
         try {
             if (!Pref.getBooleanDefaultFalse("excessive_wakelocks")) {
-                completeWakefulIntent(interceptedIntent);
-                final Bundle extras = interceptedIntent.getExtras();
+                completeWakefulIntent(inteceptedIntent);
+                final Bundle extras = inteceptedIntent.getExtras();
                 if (extras != null) extras.remove(EXTRA_WAKE_LOCK_ID);
             }
         } catch (Exception e) {
             UserError.Log.wtf(TAG, "Error patching play services: " + e);
         }
-        return super.zzf(interceptedIntent);
-    }*/
-
+        return super.zzD(inteceptedIntent);
+    }
 
     @Override
     public void onSendError(String msgID, Exception exception) {

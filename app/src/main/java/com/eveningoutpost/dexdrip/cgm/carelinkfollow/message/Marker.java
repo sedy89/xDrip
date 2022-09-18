@@ -2,9 +2,6 @@ package com.eveningoutpost.dexdrip.cgm.carelinkfollow.message;
 
 import java.util.Date;
 
-/**
- * CareLink Marker data
- */
 public class Marker {
 
     public static final String MARKER_TYPE_MEAL = "MEAL";

@@ -1,24 +1,27 @@
 package com.eveningoutpost.dexdrip.UtilityModels;
 
+import lecho.lib.hellocharts.model.PointValue;
+import lombok.NoArgsConstructor;
+
 /**
  * Created by Emma Black on 11/15/14.
  */
-
-public class PointValueExtended extends HPointValue {
+@NoArgsConstructor
+public class PointValueExtended extends PointValue {
 
     public static final int BloodTest = 1;
     public static final int AdjustableDose = 2;
 
-    public PointValueExtended(double x, float y, String note_param) {
+    public PointValueExtended(float x, float y, String note_param) {
         super(x, y);
         note = note_param;
     }
 
-    public PointValueExtended(double x, float y, float filtered) {
+    public PointValueExtended(float x, float y, float filtered) {
         super(x, y);
         calculatedFilteredValue = filtered;
     }
-    public PointValueExtended(double x, float y) {
+    public PointValueExtended(float x, float y) {
         super(x, y);
         calculatedFilteredValue = -1;
     }

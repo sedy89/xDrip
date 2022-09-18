@@ -129,4 +129,8 @@ public class CountryUtils {
         return countryCode.equals("us");
     }
 
+    public static boolean isOutsideUS(String countryCode){
+        return !isUS(countryCode);
+    }
+
 }
