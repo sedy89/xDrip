@@ -1263,7 +1263,7 @@ public class Preferences extends BasePreferenceActivity implements SearchPrefere
             final Preference carelinkFollowPass = findPreference("clfollow_pass");
             final Preference carelinkFollowCountry = findPreference("clfollow_country");
             final Preference carelinkFollowGracePeriod = findPreference("clfollow_grace_period");
-            final Preference carelinkFollowMissedPollInterval = findPreference("clfollow_missed_poll_interval");
+            final Preference carelinkFollowPollInterval = findPreference("clfollow_poll_interval");
             final Preference carelinkFollowDownloadFingerBGs = findPreference("clfollow_download_finger_bgs");
             final Preference carelinkFollowDownloadBoluses = findPreference("clfollow_download_boluses");
             final Preference carelinkFollowDownloadMeals = findPreference("clfollow_download_meals");
@@ -1275,7 +1275,7 @@ public class Preferences extends BasePreferenceActivity implements SearchPrefere
                 collectionCategory.addPreference(carelinkFollowPass);
                 collectionCategory.addPreference(carelinkFollowCountry);
                 collectionCategory.addPreference(carelinkFollowGracePeriod);
-                collectionCategory.addPreference(carelinkFollowMissedPollInterval);
+                collectionCategory.addPreference(carelinkFollowPollInterval);
                 collectionCategory.addPreference(carelinkFollowDownloadFingerBGs);
                 collectionCategory.addPreference(carelinkFollowDownloadBoluses);
                 collectionCategory.addPreference(carelinkFollowDownloadMeals);
@@ -1295,7 +1295,7 @@ public class Preferences extends BasePreferenceActivity implements SearchPrefere
                     carelinkFollowPass.setOnPreferenceChangeListener(carelinkFollowListener);
                     carelinkFollowCountry.setOnPreferenceChangeListener(carelinkFollowListener);
                     carelinkFollowGracePeriod.setOnPreferenceChangeListener(carelinkFollowListener);
-                    carelinkFollowMissedPollInterval.setOnPreferenceChangeListener(carelinkFollowListener);
+                    carelinkFollowPollInterval.setOnPreferenceChangeListener(carelinkFollowListener);
                 } catch (Exception e) {
                     //
                 }
@@ -1306,7 +1306,7 @@ public class Preferences extends BasePreferenceActivity implements SearchPrefere
                     collectionCategory.removePreference(carelinkFollowPass);
                     collectionCategory.removePreference(carelinkFollowCountry);
                     collectionCategory.removePreference(carelinkFollowGracePeriod);
-                    collectionCategory.removePreference(carelinkFollowMissedPollInterval);
+                    collectionCategory.removePreference(carelinkFollowPollInterval);
                     collectionCategory.removePreference(carelinkFollowDownloadFingerBGs);
                     collectionCategory.removePreference(carelinkFollowDownloadBoluses);
                     collectionCategory.removePreference(carelinkFollowDownloadMeals);
@@ -1648,8 +1648,9 @@ public class Preferences extends BasePreferenceActivity implements SearchPrefere
                     collectionCategory.removePreference(carelinkFollowPass);
                     collectionCategory.removePreference(carelinkFollowUser);
                     collectionCategory.removePreference(carelinkFollowGracePeriod);
-                    collectionCategory.removePreference(carelinkFollowMissedPollInterval);
+                    collectionCategory.removePreference(carelinkFollowPollInterval);
                     collectionCategory.removePreference(carelinkFollowDownloadFingerBGs);
+                    collectionCategory.removePreference(carelinkFollowDownloadBoluses);
                     collectionCategory.removePreference(carelinkFollowDownloadMeals);
                     collectionCategory.removePreference(carelinkFollowDownloadNotifications);
                 } catch (Exception e) {

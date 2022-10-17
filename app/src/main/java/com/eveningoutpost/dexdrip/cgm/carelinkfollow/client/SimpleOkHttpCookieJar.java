@@ -1,11 +1,11 @@
 package com.eveningoutpost.dexdrip.cgm.carelinkfollow.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SimpleOkHttpCookieJar implements CookieJar {
 
@@ -13,8 +13,7 @@ public class SimpleOkHttpCookieJar implements CookieJar {
 
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        if (cookies != null && cookies.size() > 0)
-            storage.addAll(cookies);
+        storage.addAll(cookies);
     }
 
     @Override
@@ -26,9 +25,9 @@ public class SimpleOkHttpCookieJar implements CookieJar {
         removeExpiredCookies();
 
         // Only return matching Cookies
-        for (Cookie cookie : storage) {
-            if(cookie.matches(url)) {
-                cookies.add(cookie);
+        for (int i = 0; i < storage.size(); i++) {
+            if(storage.get(i).matches(url)) {
+                cookies.add(storage.get(i));
             }
         }
 
@@ -43,9 +42,9 @@ public class SimpleOkHttpCookieJar implements CookieJar {
         removeExpiredCookies();
 
         // Only return matching Cookies
-        for (Cookie cookie : storage) {
-            if(cookie.name().equals(name)) {
-                cookies.add(cookie);
+        for (int i = 0; i < storage.size(); i++) {
+            if(storage.get(i).name().equals(name)) {
+                cookies.add(storage.get(i));
             }
         }
 
