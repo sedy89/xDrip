@@ -18,9 +18,9 @@
         <item>Medtrum A6</item>
         <item>Nightscout Follower</item>
         <item>Dex Share Follower</item>
-        <item>CareLink Follower</item>
         <item>Web Follower</item>
         <item>Companion App</item>
+        <item>CareLink Follower</item>
         <item>Disable Collection</item>
     </string-array>
 

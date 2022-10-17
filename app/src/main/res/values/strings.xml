@@ -1338,7 +1338,7 @@
     <string name="title_clfollow_pass">CareLink Password</string>
     <string name="summary_clfollow_pass">CareLink login password</string>
     <string name="title_clfollow_country">CareLink Country</string>
-    <string name="summary_clfollow_country">CareLink country code</string>
+    <string name="summary_clfollow_country">Select your CareLink country.</string>
     <string name="title_clfollow_lang">CareLink Language</string>
     <string name="summary_clfollow_lang">CareLink language code</string>
     <string name="title_clfollow_grace_period">Grace Period</string>
