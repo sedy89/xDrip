@@ -26,6 +26,7 @@ import lombok.val;
 public class ClassifierAction {
 
     private static final String TAG = ClassifierAction.class.getSimpleName();
+    static final String CONNECT = "connect";
     static final String BACKFILL = "backfill";
     static final String CONTROL = "control";
     static final String TXID = "UIUIUI";
@@ -35,8 +36,14 @@ public class ClassifierAction {
     public static void action(final String type, final byte[] data) {
 
         if (data == null || data.length == 0) return;
-
+        UserError.Log.d(TAG, "Type: " + type + " hex: " + JoH.bytesToHex(data));
         switch (type) {
+
+            case CONNECT:
+                UserError.Log.d(TAG, "Connect");
+                stream.reset();
+                break;
+
             case BACKFILL:
                 stream.pushNew(data);
                 UserError.Log.d(TAG, "Added backfill cache: " + JoH.bytesToHex(data));
@@ -46,7 +53,6 @@ public class ClassifierAction {
                 val g7EGlucose = new EGlucoseRxMessage(data);
                 if (g7EGlucose.isValid()) {
                     DexTimeKeeper.updateAge(TXID, (int) g7EGlucose.clock);
-                    stream.reset();
                     UserError.Log.d(TAG, "Got valid glucose: " + g7EGlucose);
                     if (g7EGlucose.usable()) {
                         lastReadingTimestamp = g7EGlucose.timestamp;
@@ -83,8 +89,8 @@ public class ClassifierAction {
                             glucose = new com.eveningoutpost.dexdrip.G5Model.EGlucoseRxMessage(data);
                         }
                         if (glucose.usable()) {
+                            UserError.Log.d(TAG, "Updating age from timestamp: " + glucose.timestamp);
                             DexTimeKeeper.updateAge(TXID, glucose.timestamp);
-                            stream.reset();
                             val ts = DexTimeKeeper.fromDexTime(TXID, glucose.timestamp);
                             lastReadingTimestamp = ts;
                             if (BgReading.getForPreciseTimestamp(ts, DexCollectionType.getCurrentDeduplicationPeriod(), false) == null) {
@@ -112,6 +118,7 @@ public class ClassifierAction {
     private static void processBackfill() {
         UserError.Log.d(TAG, "Processing backfill");
         val decoded = stream.decode();
+        stream.reset();
         for (BackFillStream.Backsie backsie : decoded) {
             UserError.Log.d(TAG, "Backsie: " + backsie.getDextime());
             val time = DexTimeKeeper.fromDexTime(TXID, backsie.getDextime());

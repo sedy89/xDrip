@@ -13,7 +13,8 @@ public class SimpleOkHttpCookieJar implements CookieJar {
 
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        storage.addAll(cookies);
+        if (cookies != null && cookies.size() > 0)
+            storage.addAll(cookies);
     }
 
     @Override
@@ -25,9 +26,9 @@ public class SimpleOkHttpCookieJar implements CookieJar {
         removeExpiredCookies();
 
         // Only return matching Cookies
-        for (int i = 0; i < storage.size(); i++) {
-            if(storage.get(i).matches(url)) {
-                cookies.add(storage.get(i));
+        for (Cookie cookie : storage) {
+            if (cookie.matches(url)) {
+                cookies.add(cookie);
             }
         }
 
@@ -42,9 +43,9 @@ public class SimpleOkHttpCookieJar implements CookieJar {
         removeExpiredCookies();
 
         // Only return matching Cookies
-        for (int i = 0; i < storage.size(); i++) {
-            if(storage.get(i).name().equals(name)) {
-                cookies.add(storage.get(i));
+        for (Cookie cookie : storage) {
+            if (cookie.name().equals(name)) {
+                cookies.add(cookie);
             }
         }
 
@@ -58,7 +59,7 @@ public class SimpleOkHttpCookieJar implements CookieJar {
 
     public void deleteCookie(String name) {
         for (int i = 0; i < storage.size(); i++) {
-            if(storage.get(i).name() == name) {
+            if (storage.get(i).name() == name) {
                 storage.remove(i);
             }
         }
@@ -68,9 +69,9 @@ public class SimpleOkHttpCookieJar implements CookieJar {
         storage.clear();
     }
 
-    private void removeExpiredCookies(){
+    private void removeExpiredCookies() {
         for (int i = 0; i < storage.size(); i++) {
-            if(storage.get(i).expiresAt() < System.currentTimeMillis()) {
+            if (storage.get(i).expiresAt() < System.currentTimeMillis()) {
                 storage.remove(i);
             }
         }

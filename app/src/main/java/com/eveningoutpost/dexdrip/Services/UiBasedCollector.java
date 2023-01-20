@@ -71,6 +71,9 @@ public class UiBasedCollector extends NotificationListenerService {
         coOptedPackages.add("com.camdiab.fx_alert.mgdl");
         coOptedPackages.add("com.camdiab.fx_alert.hx.mmoll");
         coOptedPackages.add("com.camdiab.fx_alert.hx.mgdl");
+        coOptedPackages.add("com.medtronic.diabetes.guardian");
+        coOptedPackages.add("com.medtronic.diabetes.minimedmobile.eu");
+        coOptedPackages.add("com.medtronic.diabetes.minimedmobile.us");
     }
 
     @Override
@@ -86,7 +89,7 @@ public class UiBasedCollector extends NotificationListenerService {
                 }
             } else {
                 if (JoH.pratelimit("warn-notification-access", 7200)) {
-                    UserError.Log.wtf(TAG, "Receiving notifications that we are not enabled to process");
+                    UserError.Log.wtf(TAG, "Receiving notifications that we are not enabled to process: " + fromPackage);
                 }
             }
         }
@@ -125,8 +128,13 @@ public class UiBasedCollector extends NotificationListenerService {
         switch (lastPackage) {
             default:
                 return value
+                        .replace("mmol/L", "")
+                        .replace("mmol/l", "")
+                        .replace("mg/dL", "")
+                        .replace("mg/dl", "")
                         .replace("≤", "")
-                        .replace("≥", "");
+                        .replace("≥", "")
+                        .trim();
         }
     }
 

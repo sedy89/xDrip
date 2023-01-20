@@ -22,13 +22,6 @@ public class CountrySettings {
     public String mediaHost;
     public String blePereodicDataEndpoint;
     public String region;
-    //"pathDocs":{
-    //"ddms.privacyStatementPdf":"https://carelink.minimed.eu/crs/ocl/14.02/media/hu/privacy_statement.pdf",
-    //"ddms.termsOfUsePdf":"https://carelink.minimed.eu/crs/ocl/14.02/media/hu/terms_of_use.pdf",
-    //"ddms.faqPdf":"https://carelink.minimed.eu/crs/ocl/14.02/media/hu/EMEA/BLE/faq.pdf",
-    //"ddms.analyticsToolNoticePdf":"https://carelink.minimed.eu/crs/ocl/14.02/media/hu/EMEA/analytics_tool_notice.pdf",
-    //"ddms.smsNoticePdf":"https://carelink.minimed.eu/crs/ocl/14.02/media/hu/sms_text_notice.pdf",
-    //"ddms.cookieNoticePdf":"https://carelink.minimed.eu/crs/ocl/14.02/media/hu/cookie_notice.pdf"},
     public String carbDefaultUnit;
     public String bgUnits;
     public String timeFormat;

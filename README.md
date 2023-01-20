@@ -1,6 +1,5 @@
 # Nightscout + Medtronic Carelink Follower
-> this repository is a merge of the official xdrip repository and the xDrip repo of benceszasz with is currently beeing used for https://github.com/NightscoutFoundation/xDrip/pull/1649
-> pls check the readme at -> https://github.com/benceszasz/xDrip (bszasz-connectfollow) 
+> current xdrip application along with medtronic pump data 
 
 # Nightscout xDrip+
 > Enhanced personal research version of xDrip

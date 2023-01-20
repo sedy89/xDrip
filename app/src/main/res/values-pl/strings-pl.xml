@@ -228,7 +228,7 @@
     <string name="linear_model_carbs_absorbed_per_hour">Model liniowy - wchłanianie węglowodanów na godzinę</string>
     <string name="carb_absorption_rate">Szybkość wchłaniania węglowodanów</string>
     <string name="calculate_including_glucose_trend">Oblicz z wykorzystaniem trendu glukozy</string>
-    <string name="use_trend_momentum">Korzystanie tendencja tempa</string>
+    <string name="use_trend_momentum">Korzystanie z tendencji trendu</string>
     <string name="add_calibration">Dodaj Kalibracje</string>
     <string name="system_status">Status systemu</string>
     <string name="settings">Ustawienia</string>
@@ -433,7 +433,7 @@
     <string name="displays_the_high_line">Wyświetla linie wysokiego poziomu</string>
     <string name="displays_the_low_line">Wyświetla linię niskiego poziomu</string>
     <string name="set_the_trend_period_to_display">Ustaw okres trendu do wyświetlenia</string>
-    <string name="trend_time_period">Trend Okres czasu</string>
+    <string name="trend_time_period">Okres czasu trendu</string>
     <string name="displays_the_delta_value">Wyświetla wartość delta</string>
     <string name="display_delta">Wyświetl Delta</string>
     <string name="displays_the_delta_units">Wyświetla jednostki dla Delta</string>
@@ -692,7 +692,7 @@
     <string name="beep_when_scanning_within_app">Sygnał dźwiękowy podczas skanowania w aplikacji xDrip+</string>
     <string name="use_multi_block">Użyj szybszej metody odczytu wieloblokowego</string>
     <string name="use_any_tag">Użyj metody odczytu zoptymalizowanej pod kątem dowolnego znacznika</string>
-    <string name="low_level_value">Diagnostyka/prototypowanie niskiego poziomu</string>
+    <string name="low_level_value">Niski poziom - wartość diagnostyczna/prototypowa</string>
     <string name="transmitter_id">ID twojego nadajnika Dexcom, np. 12AB3</string>
     <string name="advanced_g5_settings">Zaawansowane ustawienia G5 dla rzadko występujących sytuacji</string>
     <string name="g5_debug_settings">Ustawienia debugowania G5/G6</string>
@@ -1276,6 +1276,20 @@
     <string name="title_nsfollow_url">Adres URL do obserwowania Nightscout</string>
     <string name="summary_nsfollow_download_treatments">Pobierz również zabiegi z Nightscout jako obserwator</string>
     <string name="title_nsfollow_download_treatments">Pobieraj zabiegi</string>
+    <string name="title_clfollow_user">Nazwa użytkownika CareLink</string>
+    <string name="summary_clfollow_user">Login do CareLink</string>
+    <string name="title_clfollow_pass">Hasło CareLink</string>
+    <string name="summary_clfollow_pass">Hasło logowania do CareLink</string>
+    <string name="title_clfollow_country">Kraj CareLink</string>
+    <string name="summary_clfollow_country">Wybierz swój kraj CareLink.</string>
+    <string name="title_clfollow_lang">Język CareLink</string>
+    <string name="summary_clfollow_lang">Kod języka CareLink</string>
+    <string name="title_clfollow_download_boluses">Bolusy</string>
+    <string name="summary_clfollow_download_boluses">Pobierz bolusy z CareLink</string>
+    <string name="title_clfollow_download_meals">Posiłki</string>
+    <string name="summary_clfollow_download_meals">Pobierz posiłki z CareLink</string>
+    <string name="title_clfollow_download_notifications">Powiadomienia</string>
+    <string name="summary_clfollow_download_notifications">Pobierz powiadomienia z CareLink</string>
     <string name="title_ob1_options">Ustawienia Kolektora OB1 G5/G6</string>
     <string name="title_use_ob1_g5_collector_service">Użyj kolektora OB1</string>
     <string name="summary_ob1_g5_use_transmitter_alg">Użyj wbudowanego algorytmu transmitera do obliczeń wartości poziomu glukozy kiedy to możliwe.</string>
@@ -1290,8 +1304,8 @@
     <string name="title_ob1_g5_fallback_to_xdrip">Awaryjny powrót do algorytmu xDrip</string>
     <string name="summary_ob1_minimize_scanning">Użyj heurystyki, aby zminimalizować skanowanie Bluetooth i oszczędzać energię</string>
     <string name="title_ob1_minimize_scanning">Minimalizuj skanowanie</string>
-    <string name="summary_using_g6">Używam czujnika G6</string>
-    <string name="title_using_g6">Obsługa G6</string>
+    <string name="summary_using_g6">Używam czujnika G6 lub Dexcom 1</string>
+    <string name="title_using_g6">Obsługa G6/Dex1</string>
     <string name="summary_ob1_g5_allow_resetbond">Kolektor OB1 może odłączyć, jeśli uzna, że szyfrowanie się nie powiodło. Jeśli wystąpią problemy z odparowaniem, wyłącz tę opcję. Jeśli wtedy całkowicie utracisz połączenie, upewnij się, że jest to włączone.</string>
     <string name="title_ob1_g5_allow_resetbond">Zezwól na odłączenie OB1</string>
     <string name="summary_ob1_initiate_bonding_flag">Kolektor OB1 może inicjować wiązanie.</string>
@@ -1330,8 +1344,10 @@
     <string name="title_number_icon_tested">Ikona wartości przetestowana</string>
     <string name="summary_use_number_icon">Pokazuje bieżącą wartości glukozy jako ikonę paska powiadomień i ekranu blokady</string>
     <string name="title_use_number_icon">Pokaż małą ikonę wartości</string>
+    <string name="summary_use_number_icon_large">Pokazuje większą ikonę w obszarze powiadomień widoczną po otwarciu</string>
     <string name="title_use_number_icon_large">Użyj dużej ikony wartości</string>
     <string name="summary_number_icon_large_arrow">Pokaż strzałkę trendu w dużej ikonie</string>
+    <string name="title_number_icon_large_arrow">Pokaż strzałkę w Dużej Ikonie</string>
     <string name="title_show_home_on_boot">Pokaż xDrip przy uruchomieniu telefonu</string>
     <string name="eula">Licencja</string>
     <string name="summary_plus_accept_follower_actions">Zabiegi, kalibracje i inne działania ze strony obserwatorów będą akceptowane</string>
@@ -1518,7 +1534,7 @@
     <string name="summary_create_missing_filtered">Utwórz filtrowane dane w razie potrzeby</string>
     <string name="title_create_missing_filtered">Utwórz brakujące dane</string>
     <string name="summary_widget_hide_graph">Ukryj wykres na widżetach (efekty widoczne po następnym odczycie)</string>
-    <string name="title_widget_hide_graph">Ukryj widżet wykresu</string>
+    <string name="title_widget_hide_graph">Ukryj wykres w widżecie</string>
     <string name="summary_illustrate_remote_data">Pokaż dane otrzymane zdalnie (tylko do diagnostyki)</string>
     <string name="title_illustrate_remote_data">Ilustracja danych zdalnych</string>
     <string name="summary_show_accessibility_settings">Jeśli twój telefon ma AOD (Always On Display) możesz uruchomić widżet xDrip na wyłączonym ekranie, poprzez włączenie usługi ułatwień dostępu xDrip w ustawieniach systemu Android.</string>
@@ -1618,4 +1634,5 @@
     <string name="restoring_backup_will_erase_warning">Przywracanie kopii zapasowej usunie Twoje bieżące ustawienia i dane z kopii zapasowej.\n\nCzy na pewno chcesz to zrobić?</string>
     <string name="this_backup_looks_like_came_from_different_format_string">Ta kopia zapasowa wygląda jakby pochodziła z innego urządzenia:\n%s\nCzy na pewno chcesz przywrócić z tej kopii zapasowej?</string>
     <string name="megabyte_format_string">%.1f MB</string>
+    <string name="close">Zamknij</string>
 </resources>

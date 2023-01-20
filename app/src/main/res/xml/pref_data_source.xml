@@ -208,7 +208,7 @@
             android:title="Share Password" />
 
         <ListPreference
-            android:defaultValue="de"
+            android:defaultValue="gb"
             android:entries="@array/carelinkCountryEntries"
             android:entryValues="@array/carelinkCountryValues"
             android:key="clfollow_country"
@@ -241,11 +241,11 @@
         <EditTextPreference
             android:defaultValue="1"
             android:inputType="textNoSuggestions|textVisiblePassword"
-            android:key="clfollow_poll_interval"
+            android:key="clfollow_missed_poll_interval"
             android:maxLines="1"
             android:singleLine="true"
-            android:summary="@string/summary_clfollow_poll_interval"
-            android:title="@string/title_clfollow_poll_interval"/>
+            android:summary="@string/summary_clfollow_missed_poll_interval"
+            android:title="@string/title_clfollow_missed_poll_interval" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="clfollow_download_finger_bgs"
