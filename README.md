@@ -1,5 +1,5 @@
 # Nightscout + Medtronic Carelink Follower
-> current xdrip application along with medtronic pump data 
+> current xdrip application along with medtronic pump data and simulated iob
 
 # Nightscout xDrip+
 > Enhanced personal research version of xDrip
