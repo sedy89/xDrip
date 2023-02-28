@@ -2,7 +2,7 @@ package com.eveningoutpost.dexdrip.UtilityModels;
 
 import android.os.AsyncTask;
 
-import com.eveningoutpost.dexdrip.InfluxDB.InfluxDBUploader;
+import com.eveningoutpost.dexdrip.influxdb.InfluxDBUploader;
 import com.eveningoutpost.dexdrip.Models.BgReading;
 import com.eveningoutpost.dexdrip.Models.BloodTest;
 import com.eveningoutpost.dexdrip.Models.Calibration;
@@ -11,7 +11,7 @@ import com.eveningoutpost.dexdrip.Models.LibreBlock;
 import com.eveningoutpost.dexdrip.Models.TransmitterData;
 import com.eveningoutpost.dexdrip.Models.Treatments;
 import com.eveningoutpost.dexdrip.Models.UserError.Log;
-import com.eveningoutpost.dexdrip.Services.SyncService;
+import com.eveningoutpost.dexdrip.services.SyncService;
 import com.eveningoutpost.dexdrip.wearintegration.WatchUpdaterService;
 import com.eveningoutpost.dexdrip.xdrip;
 

@@ -17,7 +17,7 @@ import com.eveningoutpost.dexdrip.Models.Prediction;
 import com.eveningoutpost.dexdrip.Models.TransmitterData;
 import com.eveningoutpost.dexdrip.Models.UserError;
 import com.eveningoutpost.dexdrip.R;
-import com.eveningoutpost.dexdrip.Services.JamBaseBluetoothService;
+import com.eveningoutpost.dexdrip.services.JamBaseBluetoothService;
 import com.eveningoutpost.dexdrip.UtilityModels.BgGraphBuilder;
 import com.eveningoutpost.dexdrip.UtilityModels.Constants;
 import com.eveningoutpost.dexdrip.UtilityModels.Inevitable;
@@ -59,9 +59,6 @@ import java.util.concurrent.TimeUnit;
 //import rx.Subscription;
 //import rx.schedulers.Schedulers;
 
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -884,7 +881,7 @@ public class MedtrumCollectionService extends JamBaseBluetoothService implements
                         if (wakeup_jitter > 1000) {
                             UserError.Log.d(TAG, "Wake up, time jitter: " + JoH.niceTimeScalar(wakeup_jitter));
                             if ((wakeup_jitter > TOLERABLE_JITTER) && (!JoH.buggy_samsung) && JoH.isSamsung()) {
-                                UserError.Log.wtf(TAG, "Enabled Buggy Samsung workaround due to jitter of: " + JoH.niceTimeScalar(wakeup_jitter));
+                                UserError.Log.wtf(TAG, "Enabled wake workaround due to jitter of: " + JoH.niceTimeScalar(wakeup_jitter));
                                 JoH.buggy_samsung = true;
                                 PersistentStore.incrementLong(BUGGY_SAMSUNG_ENABLED);
                                 max_wakeup_jitter = 0;

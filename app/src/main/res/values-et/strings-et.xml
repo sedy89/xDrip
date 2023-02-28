@@ -405,8 +405,8 @@
     <string name="sdcard_not_readable">SD kaart pole loetav</string>
     <string name="loading_settings_from_xdrip_mainline">Seadeid laetakse xDrip põhiliinilt</string>
     <string name="warning_settings_from_xdrip_and_plus_exist">Hoiatuste seaded xDripist ja xDrip+st on olemas- laeb xDripi</string>
-    <string name="new_version_date_colon">"Uue versiooni kuupäev: "</string>
-    <string name="old_version_date_colon">"Vana versiooni kuupäev: "</string>
+    <string name="new_version_date_colon">"Uus versioon: "</string>
+    <string name="old_version_date_colon">"Vana versioon: "</string>
     <string name="speak_your_note_text">Öelge oma märkuse tekst</string>
     <string name="alarm_if_above_high_value">Hoiata kui on üle kõrge VS näidu</string>
     <string name="for_longer_than_minutes">kauem kui (minutit)</string>
@@ -635,7 +635,7 @@
     <string name="only_enable_on_trouble">Luba ainult siis, kui äpiga on probleeme.</string>
     <string name="store_logs">Säilita logid tõrgete otsinguks</string>
     <string name="show_datatables_in_app_drawer">Kuva rakenduste menüüs kalibreerimise ja VS andmetabelid.</string>
-    <string name="disable_log_transmitter_battery_warning">Peida hoiatus, mida kuvatakse saatja madala aku korral avaekraanil. (Asjakohane vaid isetehtud vasuvõtjate puhul)</string>
+    <string name="disable_log_transmitter_battery_warning">Peida hoiatus, mida kuvatakse saatja madala akutaseme korral avaekraanil. (Asjakohane vaid isetehtud vastuvõtjate puhul)</string>
     <string name="engineering_mode">Tehniline režiim</string>
     <string name="allow_unsafe_settings">Lubab muuta kõige riskantsemaid seadeid, mis võivad äpi lõhkuda!</string>
     <string name="daily_save_db">Salvesta andmebaas iga päev</string>
