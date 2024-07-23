@@ -1,6 +1,8 @@
 package com.eveningoutpost.dexdrip.cgm.carelinkfollow.message;
 
-public class TherapyAlgorithmState {
+import java.io.Serializable;
+
+public class TherapyAlgorithmState implements Serializable {
 
     public String autoModeShieldState;
     public String autoModeReadinessState;

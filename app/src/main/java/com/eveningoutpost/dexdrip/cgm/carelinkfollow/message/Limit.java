@@ -1,6 +1,8 @@
 package com.eveningoutpost.dexdrip.cgm.carelinkfollow.message;
 
-public class Limit {
+import java.io.Serializable;
+
+public class Limit implements Serializable {
 
     public int index;
     public int highLimit;

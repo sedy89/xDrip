@@ -1,11 +1,12 @@
 package com.eveningoutpost.dexdrip.cgm.carelinkfollow.message;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * CareLink Alarm data
  */
-public class Alarm {
+public class Alarm implements Serializable {
 
     public String getMessageAlarmCode() {
         return null;

@@ -1,9 +1,10 @@
 package com.eveningoutpost.dexdrip.cgm.carelinkfollow.message;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class RecentData {
+public class RecentData implements Serializable {
 
     public static final String DEVICE_FAMILY_GUARDIAN = "GUARDIAN";
     public static final String DEVICE_FAMILY_NGP = "NGP";

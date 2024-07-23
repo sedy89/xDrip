@@ -1,11 +1,12 @@
 package com.eveningoutpost.dexdrip.cgm.carelinkfollow.message;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * CareLink ActiveInsulin data
  */
-public class ActiveInsulin {
+public class ActiveInsulin implements Serializable {
 
     public Integer code;
     public Date datetime;

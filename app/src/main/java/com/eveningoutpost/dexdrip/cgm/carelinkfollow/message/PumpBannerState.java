@@ -1,6 +1,8 @@
 package com.eveningoutpost.dexdrip.cgm.carelinkfollow.message;
 
-public class PumpBannerState {
+import java.io.Serializable;
+
+public class PumpBannerState implements Serializable {
 
     public static final String STATE_DUAL_BOLUS = "DUAL_BOLUS";
     public static final String STATE_SQUARE_BOLUS = "SQUARE_BOLUS";

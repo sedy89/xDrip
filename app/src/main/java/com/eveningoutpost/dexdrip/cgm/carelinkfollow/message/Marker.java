@@ -1,11 +1,12 @@
 package com.eveningoutpost.dexdrip.cgm.carelinkfollow.message;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * CareLink Marker data
  */
-public class Marker {
+public class Marker implements Serializable {
 
     public static final String MARKER_TYPE_MEAL = "MEAL";
     public static final String MARKER_TYPE_CALIBRATION = "CALIBRATION";
